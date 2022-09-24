@@ -1,0 +1,48 @@
+default:
+  image: debian:testing
+  tags:
+    - lightweight
+
+stages:
+  - build
+
+.build debian package:
+  stage: build
+  rules:
+    - if: $CI_COMMIT_BRANCH != "nomerge/collabora-gitlab-ci"
+  tags:
+    - heavyweight
+  variables:
+    DEBIAN_FRONTEND: noninteractive
+    GIT_SUBMODULE_STRATEGY: normal
+    ARCH: x86
+    DEFCONFIG: defconfig
+  before_script:
+    - apt update
+    - apt install -y devscripts
+                     build-essential
+                     crossbuild-essential-arm64
+                     bc
+                     bison
+                     flex
+                     rsync
+                     kmod
+                     cpio
+                     libelf-dev
+                     libssl-dev
+  script:
+    - make $DEFCONFIG
+    - make -j$(nproc) bindeb-pkg
+    - mkdir artifacts && dcmd mv ../*.changes artifacts/
+  artifacts:
+    paths:
+      - artifacts
+
+build amd64 debian package:
+  extends: .build debian package
+
+build arm64 debian package:
+  extends: .build debian package
+  variables:
+    ARCH: arm64
+    CROSS_COMPILE: aarch64-linux-gnu-
