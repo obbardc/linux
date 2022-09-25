@@ -17,6 +17,7 @@ stages:
     GIT_SUBMODULE_STRATEGY: normal
     ARCH: x86
     DEFCONFIG: defconfig
+    ADDITIONAL_BUILD_CMD: ""
   before_script:
     - apt update
     - apt install -y devscripts
@@ -32,7 +33,7 @@ stages:
                      libssl-dev
   script:
     - make $DEFCONFIG
-    - make -j$(nproc) bindeb-pkg
+    - make -j$(nproc) $ADDITIONAL_BUILD_CMD bindeb-pkg
     - mkdir artifacts && dcmd mv ../*.changes artifacts/
   artifacts:
     paths:
@@ -46,3 +47,4 @@ build arm64 debian package:
   variables:
     ARCH: arm64
     CROSS_COMPILE: aarch64-linux-gnu-
+    ADDITIONAL_BUILD_CMD: KBUILD_IMAGE=arch/arm64/boot/Image
