@@ -17,6 +17,7 @@ stages:
     GIT_SUBMODULE_STRATEGY: normal
     ARCH: x86
     DEFCONFIG: defconfig
+    ADDITIONAL_DEFCONFIG: ""
     ADDITIONAL_BUILD_CMD: ""
   before_script:
     - echo Building $CI_COMMIT_REF_NAME, $CI_COMMIT_REF_SLUG
@@ -34,6 +35,12 @@ stages:
                      libssl-dev
   script:
     - make $DEFCONFIG
+
+    # Enable additional config fragments
+    - echo "$ADDITIONAL_DEFCONFIG" > .config-fragment
+    - cat .config-fragment
+    - ./scripts/kconfig/merge_config.sh .config .config-fragment
+
     - make -j$(nproc) $ADDITIONAL_BUILD_CMD bindeb-pkg
     - mkdir artifacts && dcmd mv ../*.changes artifacts/
   artifacts:

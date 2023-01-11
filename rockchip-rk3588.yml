@@ -5,6 +5,8 @@ build amd64 debian package:
 
 # Append custom configuration
 build arm64 debian package:
-  # TODO append custom configuration
   variables:
-    ARCH: arm
+    ADDITIONAL_DEFCONFIG: |
+      CONFIG_MFD_RK8XX=y
+      CONFIG_MFD_RK8XX_SPI=y
+      CONFIG_MFD_RK8XX_I2C=y
