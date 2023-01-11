@@ -1,50 +1,9 @@
-default:
-  image: debian:testing
-  tags:
-    - bookworm
+include:
+  # Default CI configuration
+  - local: default.yml
 
-stages:
-  - build
-
-.build debian package:
-  stage: build
-  rules:
-    - if: $CI_COMMIT_BRANCH != "nomerge/collabora-gitlab-ci"
-  tags:
-    - ultra-heavyweight
-  variables:
-    DEBIAN_FRONTEND: noninteractive
-    GIT_SUBMODULE_STRATEGY: normal
-    ARCH: x86
-    DEFCONFIG: defconfig
-    ADDITIONAL_BUILD_CMD: ""
-  before_script:
-    - apt update
-    - apt install -y devscripts
-                     build-essential
-                     crossbuild-essential-arm64
-                     bc
-                     bison
-                     flex
-                     rsync
-                     kmod
-                     cpio
-                     libelf-dev
-                     libssl-dev
-  script:
-    - make $DEFCONFIG
-    - make -j$(nproc) $ADDITIONAL_BUILD_CMD bindeb-pkg
-    - mkdir artifacts && dcmd mv ../*.changes artifacts/
-  artifacts:
-    paths:
-      - artifacts
-
-build amd64 debian package:
-  extends: .build debian package
-
-build arm64 debian package:
-  extends: .build debian package
-  variables:
-    ARCH: arm64
-    CROSS_COMPILE: aarch64-linux-gnu-
-    ADDITIONAL_BUILD_CMD: KBUILD_IMAGE=arch/arm64/boot/Image
+  # Include optional branch-specific CI configuration
+  - local: ${CI_COMMIT_REF_SLUG}.yml
+    rules:
+      - exists:
+        - ${CI_COMMIT_REF_SLUG}.yml

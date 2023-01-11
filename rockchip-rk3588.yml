@@ -1,0 +1,10 @@
+# Disable amd64 build
+build amd64 debian package:
+  rules:
+   - when: never
+
+# Append custom configuration
+build arm64 debian package:
+  # TODO append custom configuration
+  variables:
+    ARCH: arm
