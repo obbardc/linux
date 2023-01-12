@@ -12,6 +12,11 @@ stages:
     - if: $CI_COMMIT_BRANCH != "nomerge/collabora-gitlab-ci"
   tags:
     - ultra-heavyweight
+  cache:
+    when: on_success
+    key: $CI_COMMIT_REF_SLUG
+    paths:
+      - ccache
   variables:
     DEBIAN_FRONTEND: noninteractive
     GIT_SUBMODULE_STRATEGY: normal
@@ -19,6 +24,8 @@ stages:
     DEFCONFIG: defconfig
     ADDITIONAL_DEFCONFIG: ""
     ADDITIONAL_BUILD_CMD: ""
+    CCACHE_BASEDIR: $CI_PROJECT_DIR
+    CCACHE_DIR: $CI_PROJECT_DIR/ccache
   before_script:
     - echo Building $CI_COMMIT_REF_NAME, $CI_COMMIT_REF_SLUG
     - apt update
@@ -27,12 +34,16 @@ stages:
                      crossbuild-essential-arm64
                      bc
                      bison
+                     ccache
                      flex
                      rsync
                      kmod
                      cpio
                      libelf-dev
                      libssl-dev
+    # Setup ccache
+    - export PATH="/usr/lib/ccache:$PATH"
+    - ccache -s
   script:
     - make $DEFCONFIG
 
