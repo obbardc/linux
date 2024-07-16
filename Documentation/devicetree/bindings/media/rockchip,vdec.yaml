@@ -10,8 +10,9 @@ maintainers:
   - Heiko Stuebner <heiko@sntech.de>
 
 description: |-
-  The Rockchip rk3399 has a stateless Video Decoder that can decodes H.264,
-  HEVC an VP9 streams.
+  The Rockchip RK3399 has a stateless Video Decoder that can decode H.264,
+  HEVC and VP9 streams. Other SOCs in the family are also supported by
+  this decoder, including RK3288 and RK3328.
 
 properties:
   compatible:
