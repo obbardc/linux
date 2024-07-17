@@ -1260,8 +1260,13 @@ static const struct of_device_id of_rkvdec_match[] = {
 };
 MODULE_DEVICE_TABLE(of, of_rkvdec_match);
 
+// TODO: Error with video codec ?
+// [   12.929497] rkvdec ff440000.video-codec: Adding to iommu group 2
+// [   12.946770] rk_iommu ff440440.iommu: Error during raw reset. MMU_DTE_ADDR is not functioning
+
+// TODO: PX30 has no "cabac" clock. Make it optional?
 static const char * const rkvdec_clk_names[] = {
-	"axi", "ahb", "cabac", "core"
+	"axi", "ahb", "core"
 };
 
 static int rkvdec_probe(struct platform_device *pdev)
