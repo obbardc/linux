@@ -2396,6 +2396,7 @@
 
 		venus: video-codec@c00000 {
 			compatible = "qcom,msm8996-venus";
+			firmware-name = "qcom/venus-4.2/venus.mbn";
 			reg = <0x00c00000 0xff000>;
 			interrupts = <GIC_SPI 287 IRQ_TYPE_LEVEL_HIGH>;
 			power-domains = <&mmcc VENUS_GDSC>;
