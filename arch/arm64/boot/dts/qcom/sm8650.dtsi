@@ -5237,6 +5237,7 @@
 
 		iris: video-codec@aa00000 {
 			compatible = "qcom,sm8650-iris";
+			firmware-name = "qcom/vpu/vpu33_p4.mbn";
 			reg = <0 0x0aa00000 0 0xf0000>;
 
 			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH 0>;
