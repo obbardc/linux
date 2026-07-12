@@ -71,8 +71,11 @@ int iris_fw_load(struct iris_core *core)
 
 	ret = of_property_read_string_index(core->dev->of_node, "firmware-name", 0,
 					    &fwpath);
-	if (ret)
+	if (ret) {
 		fwpath = core->iris_firmware_desc->fwname;
+		dev_warn(core->dev, "no firmware-name in DT, using default %s\n",
+			 fwpath);
+	}
 
 	ret = iris_load_fw_to_memory(core, fwpath);
 	if (ret) {
