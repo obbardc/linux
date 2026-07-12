@@ -5369,6 +5369,7 @@
 
 		iris: video-codec@aa00000 {
 			compatible = "qcom,qcs8300-iris";
+			firmware-name = "qcom/vpu/vpu30_p4_s6.mbn";
 
 			reg = <0x0 0x0aa00000 0x0 0xf0000>;
 			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
