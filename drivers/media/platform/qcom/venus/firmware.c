@@ -223,8 +223,11 @@ int venus_boot(struct venus_core *core)
 
 	ret = of_property_read_string_index(dev->of_node, "firmware-name", 0,
 					    &fwpath);
-	if (ret)
+	if (ret) {
 		fwpath = core->res->fwname;
+		dev_warn(dev, "no firmware-name in DT, using default %s\n",
+			 fwpath);
+	}
 
 	ret = venus_load_fw(core, fwpath, &mem_phys, &mem_size);
 	if (ret) {
