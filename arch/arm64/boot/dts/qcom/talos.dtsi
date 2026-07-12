@@ -4083,6 +4083,7 @@
 
 		venus: video-codec@aa00000 {
 			compatible = "qcom,qcs615-venus", "qcom,sc7180-venus";
+			firmware-name = "qcom/venus-5.4/venus.mbn";
 			reg = <0x0 0x0aa00000 0x0 0x100000>;
 			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH 0>;
 
