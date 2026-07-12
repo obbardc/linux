@@ -2754,6 +2754,7 @@
 
 		iris: video-codec@aa00000 {
 			compatible = "qcom,sm8350-iris", "qcom,sm8250-venus";
+			firmware-name = "qcom/vpu-1.0/venus.mbn";
 			reg = <0x0 0x0aa00000 0x0 0x100000>;
 			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
 
