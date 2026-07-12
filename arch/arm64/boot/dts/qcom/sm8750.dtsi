@@ -2942,6 +2942,7 @@
 
 		iris: video-codec@aa00000 {
 			compatible = "qcom,sm8750-iris";
+			firmware-name = "qcom/vpu/vpu35_p4.mbn";
 			reg = <0x0 0x0aa00000 0x0 0xf0000>;
 
 			clocks = <&gcc GCC_VIDEO_AXI0_CLK>,
