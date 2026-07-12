@@ -1826,6 +1826,7 @@
 
 		venus: video-codec@1d00000 {
 			compatible = "qcom,msm8916-venus";
+			firmware-name = "qcom/venus-1.8/venus.mbn";
 			reg = <0x01d00000 0xff000>;
 			interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
 			power-domains = <&gcc VENUS_GDSC>;
