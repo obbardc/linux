@@ -56,6 +56,19 @@ const char * const iris_glymur_opp_clk_table[] = {
 	NULL,
 };
 
+const char * const iris_mahua_clk_reset_table[] = {
+	"core_bus",
+	"vcodec0_bus",
+	"core",
+	"vcodec0_core",
+};
+
+const char * const iris_mahua_opp_clk_table[] = {
+	"vcodec0_core",
+	"core",
+	NULL,
+};
+
 const struct tz_cp_config iris_glymur_tz_cp_config[] = {
 	{
 		.cp_start = VIDEO_REGION_SECURE_FW_REGION_ID,
