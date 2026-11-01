@@ -735,6 +735,16 @@
 	};
 };
 
+&iris {
+	firmware-name = "qcom/glymur/LENOVO/22A8/qcvss8480.mbn";
+
+	status = "okay";
+
+	video-firmware {
+		iommus = <&apps_smmu 0x19e2 0x0>;
+	};
+};
+
 &lpass_vamacro {
 	pinctrl-0 = <&dmic01_default>;
 	pinctrl-names = "default";
