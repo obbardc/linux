@@ -155,6 +155,67 @@
 	compatible = "qcom,mahua-hscnoc";
 };
 
+&iris {
+	compatible = "qcom,mahua-iris";
+
+	clocks = <&gcc GCC_VIDEO_AXI0C_CLK>,
+		 <&videocc VIDEO_CC_MVS0C_CLK>,
+		 <&videocc VIDEO_CC_MVS0_CLK>,
+		 <&gcc GCC_VIDEO_AXI0_CLK>,
+		 <&videocc VIDEO_CC_MVS0C_FREERUN_CLK>,
+		 <&videocc VIDEO_CC_MVS0_FREERUN_CLK>;
+	clock-names = "core_iface",
+		      "core",
+		      "vcodec0_core",
+		      "vcodec0_iface",
+		      "core_freerun",
+		      "vcodec0_core_freerun";
+
+	power-domains = <&videocc VIDEO_CC_MVS0C_GDSC>,
+			<&videocc VIDEO_CC_MVS0_GDSC>,
+			<&rpmhpd RPMHPD_MXC>,
+			<&rpmhpd RPMHPD_MMCX>;
+	power-domain-names = "venus",
+			     "vcodec0",
+			     "mxc",
+			     "mmcx";
+
+	resets = <&gcc GCC_VIDEO_AXI0C_CLK_ARES>,
+		 <&gcc GCC_VIDEO_AXI0_CLK_ARES>,
+		 <&videocc VIDEO_CC_MVS0C_FREERUN_CLK_ARES>,
+		 <&videocc VIDEO_CC_MVS0_FREERUN_CLK_ARES>;
+	reset-names = "core_bus",
+		      "vcodec0_bus",
+		      "core",
+		      "vcodec0_core";
+};
+
+&iris_opp_table {
+	opp-240000000 {
+		opp-hz = /bits/ 64 <240000000 360000000>;
+	};
+
+	opp-338000000 {
+		opp-hz = /bits/ 64 <338000000 507000000>;
+	};
+
+	opp-366000000 {
+		opp-hz = /bits/ 64 <366000000 549000000>;
+	};
+
+	opp-444000000 {
+		opp-hz = /bits/ 64 <444000000 666000000>;
+	};
+
+	opp-533333334 {
+		opp-hz = /bits/ 64 <533333334 800000000>;
+	};
+
+	opp-655000000 {
+		opp-hz = /bits/ 64 <655000000 982000000>;
+	};
+};
+
 &lpass_ag_noc {
 	compatible = "qcom,mahua-lpass-ag-noc", "qcom,glymur-lpass-ag-noc";
 };
