@@ -15,12 +15,16 @@ description:
 
 properties:
   compatible:
-    const: qcom,glymur-iris
+    enum:
+      - qcom,glymur-iris
+      - qcom,mahua-iris
 
   clocks:
+    minItems: 6
     maxItems: 9
 
   clock-names:
+    minItems: 6
     items:
       - const: core_iface
       - const: core
@@ -53,9 +57,11 @@ properties:
     type: object
 
   power-domains:
+    minItems: 4
     maxItems: 5
 
   power-domain-names:
+    minItems: 4
     items:
       - const: venus
       - const: vcodec0
@@ -64,9 +70,11 @@ properties:
       - const: vcodec1
 
   resets:
+    minItems: 4
     maxItems: 6
 
   reset-names:
+    minItems: 4
     items:
       - const: core_bus
       - const: vcodec0_bus
@@ -89,6 +97,39 @@ required:
 
 allOf:
   - $ref: qcom,venus-common.yaml#
+  - if:
+      properties:
+        compatible:
+          contains:
+            const: qcom,mahua-iris
+    then:
+      properties:
+        clocks:
+          maxItems: 6
+        clock-names:
+          maxItems: 6
+        power-domains:
+          maxItems: 4
+        power-domain-names:
+          maxItems: 4
+        resets:
+          maxItems: 4
+        reset-names:
+          maxItems: 4
+    else:
+      properties:
+        clocks:
+          minItems: 9
+        clock-names:
+          minItems: 9
+        power-domains:
+          minItems: 5
+        power-domain-names:
+          minItems: 5
+        resets:
+          minItems: 6
+        reset-names:
+          minItems: 6
 
 unevaluatedProperties: false
 
