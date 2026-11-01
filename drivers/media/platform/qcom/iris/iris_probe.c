@@ -555,6 +555,10 @@ static const struct of_device_id iris_dt_match[] = {
 		.data = &glymur_data,
 	},
 	{
+		.compatible = "qcom,mahua-iris",
+		.data = &mahua_data,
+	},
+	{
 		.compatible = "qcom,milos-iris",
 		.data = &milos_data,
 	},
