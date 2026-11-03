@@ -212,6 +212,24 @@ void iris_hfi_gen2_packet_sys_init(struct iris_core *core, struct iris_hfi_heade
 				    core->packet_id++,
 				    &payload,
 				    sizeof(u32));
+
+}
+
+/* DEBUG: enable firmware logging, as downstream hfi_packet_sys_debug_config() */
+void iris_hfi_gen2_packet_sys_debug_config(struct iris_core *core, struct iris_hfi_header *hdr)
+{
+	u32 payload;
+
+	iris_hfi_gen2_create_header(hdr, 0, core->header_id++);
+
+	payload = 0; /* HFI_DEBUG_CONFIG_DEFAULT */
+	iris_hfi_gen2_create_packet(hdr, 0x0300000a, HFI_HOST_FLAGS_NONE,
+				    HFI_PAYLOAD_U32_ENUM, HFI_PORT_NONE,
+				    core->packet_id++, &payload, sizeof(u32));
+	payload = 0x1c; /* FW_HIGH | FW_ERROR | FW_FATAL */
+	iris_hfi_gen2_create_packet(hdr, 0x0300000b, HFI_HOST_FLAGS_NONE,
+				    HFI_PAYLOAD_U32_ENUM, HFI_PORT_NONE,
+				    core->packet_id++, &payload, sizeof(u32));
 }
 
 void iris_hfi_gen2_packet_image_version(struct iris_core *core, struct iris_hfi_header *hdr)

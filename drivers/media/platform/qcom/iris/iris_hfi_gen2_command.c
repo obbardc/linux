@@ -50,6 +50,18 @@ static int iris_hfi_gen2_sys_image_version(struct iris_core *core)
 	ret = iris_hfi_queue_cmd_write_locked(core, hdr, hdr->size);
 
 	kfree(hdr);
+	if (ret)
+		return ret;
+
+	/* DEBUG: enable firmware logging */
+	hdr = kzalloc(sizeof(*hdr) + 2 * (sizeof(struct iris_hfi_packet) + sizeof(u32)), GFP_KERNEL);
+	if (!hdr)
+		return -ENOMEM;
+
+	iris_hfi_gen2_packet_sys_debug_config(core, hdr);
+	ret = iris_hfi_queue_cmd_write_locked(core, hdr, hdr->size);
+
+	kfree(hdr);
 
 	return ret;
 }
