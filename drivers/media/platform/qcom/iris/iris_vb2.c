@@ -51,22 +51,30 @@ static int iris_check_resolution_supported(struct iris_inst *inst)
 
 static int iris_check_session_supported(struct iris_inst *inst)
 {
+	const struct iris_platform_data *plat = inst->core->iris_platform_data;
+	u32 max_session_count = plat->max_session_count * max(plat->num_cores, 1);
 	struct iris_core *core = inst->core;
 	struct iris_inst *instance = NULL;
 	bool found = false;
+	u32 count = 0;
 	int ret;
 
 	mutex_lock(&core->lock);
 	list_for_each_entry(instance, &core->instances, list) {
-		if (instance == inst) {
+		if (instance == inst)
 			found = true;
-			break;
-		}
+		else if (instance->state != IRIS_INST_DEINIT)
+			count++;
 	}
 	mutex_unlock(&core->lock);
 
 	if (!found) {
 		ret = -EINVAL;
+		goto exit;
+	}
+
+	if (count >= max_session_count) {
+		ret = -EBUSY;
 		goto exit;
 	}
 
