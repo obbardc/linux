@@ -1194,6 +1194,16 @@ static const struct platform_inst_fw_cap inst_fw_cap_sm8550_enc[] = {
 		.set = iris_set_stage,
 	},
 	{
+		/* DEBUG: send PIPE for the encoder too, as downstream does */
+		.cap_id = PIPE,
+		.min = 1,
+		.max = 4,
+		.step_or_mask = 1,
+		.value = 4,
+		.hfi_id = HFI_PROP_PIPE,
+		.set = iris_set_pipe,
+	},
+	{
 		.cap_id = HEADER_MODE,
 		.min = V4L2_MPEG_VIDEO_HEADER_MODE_SEPARATE,
 		.max = V4L2_MPEG_VIDEO_HEADER_MODE_JOINED_WITH_1ST_FRAME,
