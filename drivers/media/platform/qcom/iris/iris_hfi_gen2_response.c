@@ -266,6 +266,11 @@ static int iris_hfi_gen2_handle_session_error(struct iris_inst *inst,
 	}
 
 	dev_err(core->dev, "session error received %#x: %s\n", pkt->type, error);
+	/* DEBUG: dump the NACKed packet to find the real error code */
+	dev_err(core->dev, "DEBUG: size %u flags %#x payload_info %#x port %#x id %u payload %*ph\n",
+		pkt->size, pkt->flags, pkt->payload_info, pkt->port, pkt->packet_id,
+		(int)min_t(u32, pkt->size > sizeof(*pkt) ? pkt->size - sizeof(*pkt) : 0, 32),
+		pkt->payload);
 	iris_vb2_queue_error(inst);
 	iris_inst_change_state(inst, IRIS_INST_ERROR);
 
