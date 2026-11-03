@@ -33,3 +33,4 @@ qcom-iris-objs += iris_buffer.o \
              iris_vpu_common.o \
 
 obj-$(CONFIG_VIDEO_QCOM_IRIS) += qcom-iris.o
+ccflags-y += -DDEBUG # DEBUG: local only
