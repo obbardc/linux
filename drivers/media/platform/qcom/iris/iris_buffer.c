@@ -896,7 +896,7 @@ int iris_vb2_buffer_done(struct iris_inst *inst, struct iris_buffer *buf)
 
 	vbuf->flags |= buf->flags;
 
-	if (buf->flags & V4L2_BUF_FLAG_ERROR) {
+	if (buf->flags & V4L2_BUF_FLAG_ERROR && V4L2_TYPE_IS_CAPTURE(type)) {
 		state = VB2_BUF_STATE_ERROR;
 		vb2_set_plane_payload(vb2, 0, 0);
 		vb2->timestamp = 0;
@@ -922,7 +922,7 @@ int iris_vb2_buffer_done(struct iris_inst *inst, struct iris_buffer *buf)
 		inst->last_buffer_dequeued = true;
 	}
 
-	state = VB2_BUF_STATE_DONE;
+	state = buf->flags & V4L2_BUF_FLAG_ERROR ? VB2_BUF_STATE_ERROR : VB2_BUF_STATE_DONE;
 	vb2->timestamp = buf->timestamp;
 	v4l2_m2m_buf_done(vbuf, state);
 
