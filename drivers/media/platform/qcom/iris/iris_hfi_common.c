@@ -106,7 +106,8 @@ irqreturn_t iris_hfi_isr_handler(int irq, void *data)
 
 	mutex_lock(&core->lock);
 	pm_runtime_mark_last_busy(core->dev);
-	iris_vpu_clear_interrupt(core);
+	if (core->hw_powered)
+		iris_vpu_clear_interrupt(core);
 	mutex_unlock(&core->lock);
 
 	if (core->hfi_sys_ops)

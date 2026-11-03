@@ -228,13 +228,19 @@ void iris_vpu_power_off_hw(struct iris_core *core)
 
 void iris_vpu_power_off(struct iris_core *core)
 {
+	core->hw_powered = false;
 	iris_opp_set_rate(core->dev, 0);
 	core->iris_platform_data->vpu_ops->power_off_hw(core);
 	core->iris_platform_data->vpu_ops->power_off_controller(core);
 	iris_unset_icc_bw(core);
 
+	/*
+	 * The caller holds core->lock, which the threaded handler also takes,
+	 * so waiting for it here can deadlock. The handler checks hw_powered
+	 * and leaves the registers alone once the hardware is off.
+	 */
 	if (!iris_vpu_watchdog(core, core->intr_status))
-		disable_irq(core->irq);
+		disable_irq_nosync(core->irq);
 }
 
 int iris_vpu_power_on_controller(struct iris_core *core)
@@ -441,6 +447,7 @@ int iris_vpu_power_on(struct iris_core *core)
 
 	core->iris_platform_data->vpu_ops->interrupt_init(core);
 	core->intr_status = 0;
+	core->hw_powered = true;
 	enable_irq(core->irq);
 
 	return 0;

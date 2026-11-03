@@ -95,6 +95,7 @@ struct qcom_ubwc_cfg_data;
  * @hfi_sys_ops: iris HFI system ops
  * @core_init_done: structure of signal completion for system response
  * @intr_status: interrupt status
+ * @hw_powered: true while the VPU is powered on, protected by @lock
  * @sys_error_handler: a delayed work for handling system fatal error
  * @instances: a list_head of all instances
  * @inst_fw_caps_dec: an array of supported instance capabilities by decoder
@@ -147,6 +148,7 @@ struct iris_core {
 	const struct iris_hfi_sys_ops		*hfi_sys_ops;
 	struct completion			core_init_done;
 	u32					intr_status;
+	bool					hw_powered;
 	struct delayed_work			sys_error_handler;
 	struct list_head			instances;
 	/* encoder and decoder have overlapping caps, so two different arrays are required */
