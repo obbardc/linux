@@ -155,6 +155,11 @@ static int iris_hfi_gen2_session_set_property(struct iris_inst *inst, u32 packet
 {
 	struct iris_inst_hfi_gen2 *inst_hfi_gen2 = to_iris_inst_hfi_gen2(inst);
 
+	/* DEBUG: trace properties sent to firmware */
+	dev_dbg(inst->core->dev, "DEBUG: set prop %#x port %#x ptype %#x %*ph\n",
+		packet_type, plane, payload_type,
+		(int)min_t(u32, payload_size, 16), payload);
+
 	iris_hfi_gen2_packet_session_property(inst,
 					      packet_type,
 					      flag,
