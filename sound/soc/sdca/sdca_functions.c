@@ -2270,8 +2270,9 @@ EXPORT_SYMBOL_NS(sdca_parse_function, "SND_SOC_SDCA");
  * @function: Function populated via static tables (populate_function path).
  *
  * Runs the same per-Control classifiers as sdca_parse_function() so both
- * entry paths land on identical @is_volatile and @has_reset/@reset fields.
- * Elevate-only: codec-set flags/values are preserved.
+ * entry paths land on identical @nbits, @is_volatile and
+ * @has_reset/@reset fields.  Elevate-only: codec-set flags/values are
+ * preserved.
  */
 void sdca_apply_default_control_classifiers(struct sdca_function_data *function)
 {
@@ -2282,6 +2283,10 @@ void sdca_apply_default_control_classifiers(struct sdca_function_data *function)
 
 		for (j = 0; j < entity->num_controls; j++) {
 			struct sdca_control *control = &entity->controls[j];
+
+			if (!control->nbits)
+				control->nbits =
+					find_sdca_control_bits(entity, control);
 
 			if (!control->is_volatile)
 				control->is_volatile =

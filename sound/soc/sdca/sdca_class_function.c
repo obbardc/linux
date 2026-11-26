@@ -387,6 +387,14 @@ static int class_function_probe(struct auxiliary_device *auxdev,
 	if (!drv->function->reset_max_delay)
 		drv->function->reset_max_delay = 100000;
 
+	/*
+	 * Likewise give statically described Controls the bit widths and
+	 * volatile/reset classification that sdca_parse_function() derives
+	 * from the specification, so every codec gets the same defaults.
+	 */
+	if (core->ops && core->ops->populate_function)
+		sdca_apply_default_control_classifiers(drv->function);
+
 	ndefaults = sdca_regmap_count_constants(dev, drv->function);
 	if (ndefaults < 0)
 		return ndefaults;
