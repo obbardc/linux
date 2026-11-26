@@ -178,8 +178,23 @@ int qcom_snd_sdw_startup(struct snd_pcm_substream *substream)
 }
 EXPORT_SYMBOL_GPL(qcom_snd_sdw_startup);
 
-/* Prepare+enable the SDW stream for one direction. */
-static int qcom_snd_sdw_prepare_dir(struct snd_soc_pcm_runtime *rtd, int dir)
+/*
+ * A stream that is still only allocated (or was released again) has no
+ * peripheral configured on it, for example a VI sense capture stream
+ * whose port is disabled.  There is nothing to prepare or enable then.
+ */
+static bool sdw_stream_unconfigured(struct sdw_stream_runtime *sr)
+{
+	return sr->state == SDW_STREAM_ALLOCATED ||
+	       sr->state == SDW_STREAM_RELEASED;
+}
+
+/*
+ * Prepare+enable the SDW stream for one direction.  When @optional is
+ * set, a stream without any configured peripheral is skipped.
+ */
+static int qcom_snd_sdw_prepare_dir(struct snd_soc_pcm_runtime *rtd, int dir,
+				    bool optional)
 {
 	struct sdw_stream_runtime *sruntime = NULL;
 	struct snd_soc_dai *codec_dai;
@@ -193,6 +208,9 @@ static int qcom_snd_sdw_prepare_dir(struct snd_soc_pcm_runtime *rtd, int dir)
 			break;
 	}
 	if (!sruntime || IS_ERR(sruntime))
+		return 0;
+
+	if (optional && sdw_stream_unconfigured(sruntime))
 		return 0;
 
 	ret = sdw_prepare_stream(sruntime);
@@ -227,12 +245,12 @@ int qcom_snd_sdw_prepare(struct snd_pcm_substream *substream,
 	 * accumulated resulting in Click/Pop Noise
 	 * PA enable/mute are handled as part of codec DAPM and digital mute.
 	 */
-	ret = qcom_snd_sdw_prepare_dir(rtd, substream->stream);
+	ret = qcom_snd_sdw_prepare_dir(rtd, substream->stream, false);
 	if (ret)
 		return ret;
 
 	if (rtd->dai_link->multi_direction_codecs) {
-		ret = qcom_snd_sdw_prepare_dir(rtd, substream->stream ^ 1);
+		ret = qcom_snd_sdw_prepare_dir(rtd, substream->stream ^ 1, true);
 		if (ret) {
 			struct sdw_stream_runtime *sr = NULL;
 			struct snd_soc_dai *cd;
@@ -332,7 +350,7 @@ int qcom_snd_sdw_hw_free(struct snd_pcm_substream *substream, bool *stream_prepa
 
 	if (rtd->dai_link->multi_direction_codecs) {
 		sr = sdw_find_dir_stream(rtd, substream->stream ^ 1);
-		if (sr) {
+		if (sr && !sdw_stream_unconfigured(sr)) {
 			sdw_disable_stream(sr);
 			sdw_deprepare_stream(sr);
 		}
